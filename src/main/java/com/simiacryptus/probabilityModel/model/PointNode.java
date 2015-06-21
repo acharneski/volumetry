@@ -9,7 +9,6 @@ import org.json.JSONException;
 
 import com.simiacryptus.collections.CompositeCollection;
 import com.simiacryptus.collections.ProxyCollection;
-import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.probabilityModel.rules.PartitionRule;
 import com.simiacryptus.probabilityModel.visitors.JsonConverter;
 import com.simiacryptus.probabilityModel.volume.DoubleVolume;

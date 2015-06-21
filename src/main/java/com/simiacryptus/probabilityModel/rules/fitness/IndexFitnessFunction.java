@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simiacryptus.lang.Function;
 import com.simiacryptus.probabilityModel.model.PointNode;
 
 public final class IndexFitnessFunction

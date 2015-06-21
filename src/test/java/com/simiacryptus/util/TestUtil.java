@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -194,7 +193,7 @@ public class TestUtil
     Color[] colors = new Color[size];
     Arrays.fill(colors, Color.BLACK);
     final Scatter scatter = new Scatter(coordinates, colors);
-    scatter.setWidth(2);
+    scatter.setWidth(1);
     scatter.setColor(Color.BLACK);
     
     final AtomicInteger count = new AtomicInteger(0);
@@ -215,6 +214,7 @@ public class TestUtil
                 break;
               }
               final double[] dataPoint = e.getKey().sample(random);
+              colors[index] = e.getValue();
               coordinates[index] = new Coord3d(dataPoint[0], dataPoint[1], 3 > dataPoint.length ? 0 : dataPoint[2]);
               if(index%100==0) scatter.updateBounds();
             }

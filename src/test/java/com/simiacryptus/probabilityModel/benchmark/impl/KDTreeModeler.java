@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.simiacryptus.lang.NotImplementedException;
-import com.simiacryptus.probabilityModel.benchmark.base.DataDistribution;
 import com.simiacryptus.probabilityModel.benchmark.base.DataLearner;
 import com.simiacryptus.probabilityModel.benchmark.base.TestObject;
 import com.simiacryptus.probabilityModel.kdtree.KDTree;

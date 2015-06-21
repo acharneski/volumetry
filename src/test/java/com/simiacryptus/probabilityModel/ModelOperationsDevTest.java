@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -210,12 +209,12 @@ public class ModelOperationsDevTest
   {
     LOG.d("Started %s\n", Thread.currentThread().getStackTrace()[1].getMethodName());
     MetricRuleGenerator.DEBUG = 0;
-    this.trainingSize = 500;
-    this.plotSize = 5000;
+    this.trainingSize = 5000;
+    this.plotSize = 50000;
     TestUtil.random.setSeed(0x54690d4800020cd4l);
     
     final PointModel model1 = new PointModel(this.range);
-    TestUtil.fillModel(model1, Test3dDistributions.MV2Normal_1, this.trainingSize);
+    TestUtil.fillModel(model1, Test3dDistributions.MV3Snake_1, this.trainingSize);
     new ModelPartitioner(new VolumeEntropySplitFitness()).visit(model1, Integer.MAX_VALUE);
     LOG.d("Initialized model; %s nodes", model1.getNodeCount());
     
@@ -391,6 +390,9 @@ public class ModelOperationsDevTest
     final Test3dDistributions referenceDistribution = Test3dDistributions.MV3Logistic;
     LOG.d("Started %s\n", Thread.currentThread().getStackTrace()[1].getMethodName());
     
+    this.trainingSize = 15000;
+    this.plotSize = 15000;
+
     final PointModel model = new PointModel(this.range);
     TestUtil.fillModel(model, referenceDistribution, this.trainingSize);
     new ModelPartitioner(new VolumeEntropySplitFitness()).visit(model, Integer.MAX_VALUE);
@@ -406,7 +408,7 @@ public class ModelOperationsDevTest
     
     // TestUtil.openJson(((JsonConverter<?>)model.visitUp(new
     // JsonConverter().setPointSample(10), 0, 3)).jsonCache.get(model));
-    TestUtil.compareDensityMatrix(this.range, 10000, modelDistribution, referenceDistribution, Test3dDistributions.MV2Normal_M34);
+    TestUtil.compareDensityMatrix(this.range, this.plotSize, modelDistribution, referenceDistribution, Test3dDistributions.MV2Normal_M34);
   }
   
 }

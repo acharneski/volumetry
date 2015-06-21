@@ -1,6 +1,5 @@
 package com.simiacryptus.probabilityModel.rules;
 
-import java.security.InvalidParameterException;
 import java.util.Arrays;
 
 import org.json.JSONException;

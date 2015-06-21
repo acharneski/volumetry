@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import com.simiacryptus.probabilityModel.benchmark.base.DataDistribution;
 import com.simiacryptus.probabilityModel.benchmark.base.DataSampler;
-import com.simiacryptus.probabilityModel.benchmark.util.Distribution1d;
 import com.simiacryptus.probabilityModel.benchmark.util.DoubleArrayMath;
 import com.simiacryptus.probabilityModel.volume.SpacialVolume;
 

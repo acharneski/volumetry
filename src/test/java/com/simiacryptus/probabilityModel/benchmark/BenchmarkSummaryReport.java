@@ -1,12 +1,9 @@
 package com.simiacryptus.probabilityModel.benchmark;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import com.simiacryptus.data.DoubleRange;
 
-import com.simiacryptus.data.DoubleRange;
 import com.simiacryptus.probabilityModel.benchmark.base.TestObject;
-import com.simiacryptus.probabilityModel.benchmark.impl.KDTreeModeler;
 import com.simiacryptus.probabilityModel.benchmark.impl.LibDataDistributionSampler;
 import com.simiacryptus.probabilityModel.benchmark.impl.LibDataSampler;
 import com.simiacryptus.probabilityModel.benchmark.impl.TreeModeler;

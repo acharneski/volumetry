@@ -17,7 +17,6 @@ import com.simiacryptus.probabilityModel.rules.MetricRuleGenerator;
 import com.simiacryptus.probabilityModel.rules.PartitionRule;
 import com.simiacryptus.probabilityModel.rules.fitness.SplitFitness;
 import com.simiacryptus.probabilityModel.rules.metrics.Metric;
-import com.simiacryptus.probabilityModel.volume.SpacialVolume;
 
 public class PCARuleGenerator extends MetricRuleGenerator
 {

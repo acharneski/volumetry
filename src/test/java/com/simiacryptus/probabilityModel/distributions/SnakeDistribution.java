@@ -20,7 +20,7 @@ public final class SnakeDistribution extends DistributionBase
   {
     this.dims = dims;
     final List<PolynomialSplineFunction> parametricFuctions = new ArrayList<PolynomialSplineFunction>();
-    final int snakeNodes = 20;
+    final int snakeNodes = 10;
     for (int j = 0; j < dims; j++)
     {
       final double[] xval = new double[snakeNodes];
@@ -28,7 +28,7 @@ public final class SnakeDistribution extends DistributionBase
       for (int i = 0; i < xval.length; i++)
       {
         xval[i] = random.nextDouble();
-        yval[i] = (double) i / (xval.length - 1);
+        yval[i] = i * 1. / (xval.length - 1);
       }
       parametricFuctions.add(new LoessInterpolator().interpolate(yval, xval));
     }

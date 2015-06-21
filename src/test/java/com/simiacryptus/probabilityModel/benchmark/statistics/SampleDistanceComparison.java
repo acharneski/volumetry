@@ -3,14 +3,12 @@ package com.simiacryptus.probabilityModel.benchmark.statistics;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.simiacryptus.probabilityModel.benchmark.base.DataSampler;
-import com.simiacryptus.probabilityModel.benchmark.util.Distribution1d;
 import com.simiacryptus.probabilityModel.kdtree.KDTree;
 
 public class SampleDistanceComparison

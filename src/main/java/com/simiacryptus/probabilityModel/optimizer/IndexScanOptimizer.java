@@ -3,7 +3,6 @@ package com.simiacryptus.probabilityModel.optimizer;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import com.simiacryptus.lang.Function;
 import com.simiacryptus.probabilityModel.model.PointNode;
 import com.simiacryptus.probabilityModel.rules.fitness.IndexFitnessFunction;
 

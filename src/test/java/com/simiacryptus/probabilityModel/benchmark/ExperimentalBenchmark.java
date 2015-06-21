@@ -1,23 +1,17 @@
 package com.simiacryptus.probabilityModel.benchmark;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.simiacryptus.data.DoubleRange;
-import com.simiacryptus.data.DoubleRange;
-import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.lang.MathUtil;
 import com.simiacryptus.probabilityModel.benchmark.base.TestObject;
-import com.simiacryptus.probabilityModel.benchmark.impl.KDTreeModeler;
-import com.simiacryptus.probabilityModel.benchmark.impl.LibDataDistributionSampler;
 import com.simiacryptus.probabilityModel.benchmark.impl.LibDataSampler;
 import com.simiacryptus.probabilityModel.benchmark.impl.TreeModeler;
 import com.simiacryptus.probabilityModel.distributions.Test3dDistributions;
 import com.simiacryptus.probabilityModel.model.PointNode;
 import com.simiacryptus.probabilityModel.rules.fitness.SplitFitness;
 import com.simiacryptus.probabilityModel.rules.fitness.VolumeDataDensity;
-import com.simiacryptus.probabilityModel.rules.fitness.VolumeEntropySplitFitness;
 import com.simiacryptus.probabilityModel.rules.fitness.VolumeDataDensity.VolumeDataNormalizer;
 import com.simiacryptus.probabilityModel.rules.pca.PCARuleGenerator;
 import com.simiacryptus.probabilityModel.visitors.ModelPartitioner;

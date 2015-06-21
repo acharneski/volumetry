@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import com.simiacryptus.lang.LOG;
 import com.simiacryptus.lang.LOG;
 import com.simiacryptus.probabilityModel.benchmark.base.DataLearner;
 import com.simiacryptus.probabilityModel.benchmark.base.DataSampler;
