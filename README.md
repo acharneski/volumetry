@@ -6,7 +6,7 @@ Few methods currently exist for approximating a [joint probability distribution]
 
 ## Introduction
 
-This project explores a density estimation algorithm based on (space partitioning)[https://en.wikipedia.org/wiki/Space_partitioning] and the sampled densities of the resulting partitions. The result is a structure similar in design and construction to a [decision tree](https://en.wikipedia.org/wiki/Decision_tree), with a modified entropy rule.
+This project explores a density estimation algorithm based on [space partitioning](https://en.wikipedia.org/wiki/Space_partitioning) and the sampled densities of the resulting partitions. The result is a structure similar in design and construction to a [decision tree](https://en.wikipedia.org/wiki/Decision_tree), with a modified entropy rule.
 
 ## Running it
 
