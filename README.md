@@ -2,7 +2,7 @@
 
 ## Background
 
-Few methods currently exist for approximating a [joint probability distribution](https://en.wikipedia.org/wiki/Joint_probability_distribution) from a sample of data points. Popular methods are (kernel density estimation)[https://en.wikipedia.org/wiki/Multivariate_kernel_density_estimation] and, slightly less directly, (gaussian mixture models)[https://en.wikipedia.org/wiki/Mixture_model] or (clustering)[https://en.wikipedia.org/wiki/Cluster_analysis].
+Few methods currently exist for approximating a [joint probability distribution](https://en.wikipedia.org/wiki/Joint_probability_distribution) from a sample of data points. Popular methods are [kernel density estimation](https://en.wikipedia.org/wiki/Multivariate_kernel_density_estimation) and, slightly less directly, [gaussian mixture models](https://en.wikipedia.org/wiki/Mixture_model) or [clustering](https://en.wikipedia.org/wiki/Cluster_analysis).
 
 ## Introduction
 
