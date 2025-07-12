@@ -1,11 +1,11 @@
 package com.simiacryptus.probabilityModel.kdtree;
 
+import com.simiacryptus.probabilityModel.kdtree.KDTree.Side;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import com.simiacryptus.probabilityModel.kdtree.KDTree.Side;
 
 class KDTreeNode
 {
@@ -137,12 +137,7 @@ class KDTreeNode
   {
     return this.kdTree.points[this.getSplitIndex()];
   }
-  
-  public double getSplitValue()
-  {
-    return this.getSplitPoint()[this.dimension];
-  }
-  
+
   private int size()
   {
     return this.endIndex - this.startIndex;

@@ -1,19 +1,14 @@
 package com.simiacryptus.probabilityModel.visitors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.probabilityModel.model.DistributionModel;
 import com.simiacryptus.probabilityModel.model.NodeBase;
 import com.simiacryptus.probabilityModel.model.PointNode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.*;
 
 public final class JsonConverter<T extends NodeBase<T>> extends NodeVisitor<JsonConverter<T>, T>
 {
@@ -151,12 +146,7 @@ public final class JsonConverter<T extends NodeBase<T>> extends NodeVisitor<Json
     }
     return value;
   }
-  
-  public int isShowPoints()
-  {
-    return this.pointSample;
-  }
-  
+
   public JsonConverter<T> setPointSample(final int pointSample)
   {
     this.pointSample = pointSample;

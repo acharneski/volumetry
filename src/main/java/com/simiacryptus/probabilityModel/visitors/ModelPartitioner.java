@@ -1,14 +1,13 @@
 package com.simiacryptus.probabilityModel.visitors;
 
-import java.util.concurrent.Executors;
-
 import com.simiacryptus.probabilityModel.model.PointNode;
-import com.simiacryptus.probabilityModel.rules.PartitionRule;
 import com.simiacryptus.probabilityModel.rules.MetricRuleGenerator;
+import com.simiacryptus.probabilityModel.rules.PartitionRule;
 import com.simiacryptus.probabilityModel.rules.RuleGenerator;
-import com.simiacryptus.probabilityModel.rules.fitness.HybridEntropySplitFitness;
 import com.simiacryptus.probabilityModel.rules.fitness.SplitFitness;
 import com.simiacryptus.probabilityModel.volume.SpacialVolume;
+
+import java.util.concurrent.Executors;
 
 public class ModelPartitioner extends PoolNodeVisitor<ModelPartitioner, PointNode>
 {
@@ -17,12 +16,7 @@ public class ModelPartitioner extends PoolNodeVisitor<ModelPartitioner, PointNod
   
   private int                  minPointThreshold = 5;
   private boolean              rewriteRules      = true;
-  
-  public ModelPartitioner()
-  {
-    this(new HybridEntropySplitFitness());
-  }
-  
+
   public ModelPartitioner(final RuleGenerator ruleGenerator)
   {
     super(multithreaded ? Executors.newFixedThreadPool(16) : null);
@@ -34,39 +28,13 @@ public class ModelPartitioner extends PoolNodeVisitor<ModelPartitioner, PointNod
     this(new MetricRuleGenerator(splitFitness));
     
   }
-  
-  @Override
-  protected void finalize() throws Throwable
-  {
-    if (null != this.pool)
-    {
-      this.pool.shutdown();
-    }
-    super.finalize();
-  }
-  
-  public int getMinPointThreshold()
-  {
-    return this.minPointThreshold;
-  }
-  
-  public boolean isRewriteRules()
-  {
-    return this.rewriteRules;
-  }
-  
+
   public ModelPartitioner setMinPointThreshold(final int minPointThreshold)
   {
     this.minPointThreshold = minPointThreshold;
     return this;
   }
-  
-  public ModelPartitioner setPartitions(final int partitions)
-  {
-    this.ruleGenerator.setSplitPoints(partitions);
-    return this;
-  }
-  
+
   public ModelPartitioner setRewriteRules(final boolean rewriteRules)
   {
     this.rewriteRules = rewriteRules;

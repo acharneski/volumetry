@@ -16,23 +16,7 @@ public class JvmArrays
    * used in preference to mergesort or quicksort.
    */
   private static final int INSERTIONSORT_THRESHOLD = 7;
-  
-  public static int getMaxIndex(final double[] array)
-  {
-    int maxIndex = -1;
-    double maxValue = -1;
-    for (int i = 0; i < array.length; i++)
-    {
-      final double v = array[i];
-      if (maxValue < v)
-      {
-        maxValue = v;
-        maxIndex = i;
-      }
-    }
-    return maxIndex;
-  }
-  
+
   public static double[] lookup(final int[] indexes, final double[] values)
   {
     final double[] reordered = new double[indexes.length];

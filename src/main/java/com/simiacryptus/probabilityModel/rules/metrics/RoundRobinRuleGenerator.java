@@ -11,13 +11,6 @@ public class RoundRobinRuleGenerator implements RuleGenerator
   private int splitPoints = 1;
 
   @Override
-  public RuleGenerator setSplitPoints(int partitions)
-  {
-    splitPoints = partitions;
-    return this;
-  }
-
-  @Override
   public int getSplitPoints()
   {
     return splitPoints;
@@ -44,7 +37,7 @@ public class RoundRobinRuleGenerator implements RuleGenerator
     {
       values[i] = range.from + size * (i+1);
     }
-    return new MetricRule(node.getUnboundableRegion(), new DimensionMetric(dimension, range), values);
+    return new MetricRule(node.getUnboundableRegion(), new DimensionMetric(dimension), values);
   }
   
 }

@@ -66,18 +66,7 @@ public class KDTree
     }
     return truncated;
   }
-  
-  public double[][] getNearset(final double[] point, final int size)
-  {
-    final TreeMap<Double, double[]> set = this.getNearestPoints(point, size);
-    final double[][] pts = new double[size][];
-    for (int i = 0; i < size; i++)
-    {
-      pts[i] = 0 < set.size() ? set.pollFirstEntry().getValue() : null;
-    }
-    return pts;
-  }
-  
+
   public KDTreeNode getRoot()
   {
     return new KDTreeNode(this);

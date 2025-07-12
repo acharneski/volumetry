@@ -5,16 +5,7 @@ import java.util.List;
 
 public class VolumeDataDensity
 {
-  
-  public static class DataSmoother extends VolumeDataNormalizer
-  {
-    @Override
-    protected VolumeDataDensity processItem(final VolumeDataDensity item, final int count, final double volumeTotal, final double dataTotal)
-    {
-      return new VolumeDataDensity(item.volume / volumeTotal, (item.data + 1) / (dataTotal + count));
-    }
-  }
-  
+
   public static class VolumeDataNormalizer extends VolumeDataProcessor
   {
     @Override
@@ -45,20 +36,7 @@ public class VolumeDataDensity
   {
     public abstract List<VolumeDataDensity> process(List<VolumeDataDensity> list);
   }
-  
-  public static class VolumeDataSmoother extends VolumeDataNormalizer
-  {
-    @Override
-    protected VolumeDataDensity processItem(final VolumeDataDensity item, final int count, double volumeTotal, double dataTotal)
-    {
-      volumeTotal = volumeTotal + count;
-      dataTotal = dataTotal + count;
-      final double itemVolume = item.volume + 1;
-      final double itemData = item.data + count * itemVolume / volumeTotal;
-      return new VolumeDataDensity(itemVolume / volumeTotal, itemData / dataTotal);
-    }
-  }
-  
+
   public final double volume;
   public final double data;
   

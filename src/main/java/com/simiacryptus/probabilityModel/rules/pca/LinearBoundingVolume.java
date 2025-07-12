@@ -1,26 +1,17 @@
 package com.simiacryptus.probabilityModel.rules.pca;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
-
-import org.apache.commons.math3.exception.OutOfRangeException;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.LUDecomposition;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.simiacryptus.data.DoubleRange;
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.lang.MathUtil;
 import com.simiacryptus.probabilityModel.points.Point;
 import com.simiacryptus.probabilityModel.volume.DoubleVolume;
+import org.apache.commons.math3.exception.OutOfRangeException;
+import org.apache.commons.math3.linear.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.*;
 
 public class LinearBoundingVolume
 {
@@ -84,7 +75,6 @@ public class LinearBoundingVolume
       trialBounds.set(i, newBound);
       if(0 == new LUDecomposition(trialMatrix).getDeterminant()) continue;
       LinearBoundingVolume trialVolume = new LinearBoundingVolume(trialMatrix, trialBounds);
-      final double value = trialVolume.getVolume().value;
       candidates.add(trialVolume);
     }
     return candidates.first();

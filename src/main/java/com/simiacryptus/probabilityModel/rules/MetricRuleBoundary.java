@@ -1,14 +1,10 @@
 package com.simiacryptus.probabilityModel.rules;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.simiacryptus.probabilityModel.rules.metrics.MetricSurface;
 
 public class MetricRuleBoundary
 {
-  
-  public static int           DEBUG = 1;
+
   private final MetricSurface max;
   private final MetricSurface min;
   
@@ -44,27 +40,5 @@ public class MetricRuleBoundary
       this.max.add(points);
     }
   }
-  
-  public double[][] findBorderPoints(final double tolerance, final int size)
-  {
-    final ArrayList<double[]> list = new ArrayList<double[]>();
-    if (null != this.max && null != this.min)
-    {
-      list.addAll(Arrays.asList(this.max.findBorderPoints(size / 2)));
-      list.addAll(Arrays.asList(this.min.findBorderPoints(size / 2)));
-    }
-    else if (null != this.max)
-    {
-      list.addAll(Arrays.asList(this.max.findBorderPoints(size / 2)));
-    }
-    else if (null != this.min)
-    {
-      list.addAll(Arrays.asList(this.min.findBorderPoints(size / 2)));
-    }
-    else
-    {
-      throw new IllegalStateException();
-    }
-    return list.toArray(new double[][] {});
-  }
+
 }

@@ -3,14 +3,12 @@ package com.simiacryptus.probabilityModel.rules.metrics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.simiacryptus.data.DoubleRange;
-
 public class DimensionMetric extends Metric
 {
   
   public final int dimension;
-  
-  public DimensionMetric(final int dimension, DoubleRange range)
+
+  public DimensionMetric(final int dimension)
   {
     super();
     this.dimension = dimension;

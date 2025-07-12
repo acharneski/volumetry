@@ -1,11 +1,10 @@
 package com.simiacryptus.data;
 
-import java.util.Random;
-
+import com.simiacryptus.lang.JsonFormattable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.simiacryptus.lang.JsonFormattable;
+import java.util.Random;
 
 public class DoubleRange implements JsonFormattable
 {
@@ -88,16 +87,7 @@ public class DoubleRange implements JsonFormattable
     if(UNBOUNDED.equals(this)) return Double.POSITIVE_INFINITY;
     return this.to - this.from;
   }
-  
-  public JsonFormattable[] split(final double splitValue)
-  {
-    return new JsonFormattable[] {
-        new DoubleRange(this.from, splitValue),
-        new DoubleRange(splitValue, this.to)
-    
-    };
-  }
-  
+
   public double to()
   {
     return this.to;

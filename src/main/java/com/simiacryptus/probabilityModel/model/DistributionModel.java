@@ -1,9 +1,5 @@
 package com.simiacryptus.probabilityModel.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import com.simiacryptus.data.DoubleRange;
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.probabilityModel.rules.MetricRule;
@@ -13,6 +9,10 @@ import com.simiacryptus.probabilityModel.rules.metrics.DimensionMetric;
 import com.simiacryptus.probabilityModel.visitors.NodeVisitor;
 import com.simiacryptus.probabilityModel.volume.DoubleVolume;
 import com.simiacryptus.probabilityModel.volume.SpacialVolume;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public abstract class DistributionModel<T extends NodeBase<T>>
 {
@@ -79,7 +79,7 @@ public abstract class DistributionModel<T extends NodeBase<T>>
             {
               return 0;
             }
-          }, projectedNode, childProjection, null);
+          }, projectedNode, childProjection);
         }
       }
     }
@@ -95,8 +95,8 @@ public abstract class DistributionModel<T extends NodeBase<T>>
     }
     return projectedNode;
   }
-  
-  static ScalarNode evaluate(final BinaryNodeFunction f, final NodeBase<?> left, final NodeBase<?> right, final ScalarNode parent)
+
+  static ScalarNode evaluate(final BinaryNodeFunction f, final NodeBase<?> left, final NodeBase<?> right)
   {
     final SpacialVolume region = left.getRegion().union(right.getRegion());
     final ScalarNode resultNode = new ScalarNode((ScalarNode)null, region);
@@ -155,7 +155,7 @@ public abstract class DistributionModel<T extends NodeBase<T>>
           ScalarNode rightSubnode = new ScalarNode((ScalarNode)null, rightNode);
           rightSubnode.copyChildren(rightNode);
           rightSubnode = rightSubnode.slice(intersect.getBounds());
-          ScalarNode resultSubnode = evaluate(f, leftSubnode, rightSubnode, resultNode);
+          ScalarNode resultSubnode = evaluate(f, leftSubnode, rightSubnode);
           resultNode.addChild(resultSubnode);
           newWeight += resultSubnode.getWeight();
         }
@@ -185,7 +185,7 @@ public abstract class DistributionModel<T extends NodeBase<T>>
   public ScalarModel evaluate(final BinaryNodeFunction f, final DistributionModel<?> right)
   {
     final ScalarModel scalarModel = new ScalarModel(null);
-    scalarModel.setRoot(evaluate(f, this.getRoot(), right.getRoot(), null));
+    scalarModel.setRoot(evaluate(f, this.getRoot(), right.getRoot()));
     return scalarModel;
   }
   

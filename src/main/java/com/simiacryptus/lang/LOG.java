@@ -5,11 +5,6 @@ import java.util.Arrays;
 public class LOG
 {
 
-  public enum Severity
-  {
-    Debug
-  }
-
   private static String toString(double[] point)
   {
     StringBuffer sb = new StringBuffer();
@@ -24,7 +19,7 @@ public class LOG
   public static void d(String msg, Object... args)
   {
     preprocessArgs(args);
-    log(Severity.Debug, msg, args);
+    log(msg, args);
   }
 
   private static void preprocessArgs(Object... args)
@@ -59,8 +54,8 @@ public class LOG
   }
 
   private static final long startTime = System.nanoTime();
-  
-  private static void log(Severity debug, String msg, Object[] args)
+
+  private static void log(String msg, Object[] args)
   {
     String formatted = String.format(msg, args);
     StackTraceElement caller = Thread.currentThread().getStackTrace()[3];

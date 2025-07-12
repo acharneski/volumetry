@@ -1,12 +1,7 @@
 package com.simiacryptus.data;
 
-import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.simiacryptus.binary.BitInputStream;
-import com.simiacryptus.binary.Bits;
 
 public class LongRange
 {
@@ -29,18 +24,7 @@ public class LongRange
     if (this.to <= value) { return false; }
     return true;
   }
-  
-  public long decode(final Bits range)
-  {
-    return this.fromIndex(range.toLong());
-  }
-  
-  public Bits encode(final long d)
-  {
-    final long index = this.toIndex(d);
-    return new Bits(index, this.bitDepth);
-  }
-  
+
   @Override
   public boolean equals(final Object obj)
   {
@@ -52,14 +36,7 @@ public class LongRange
     if (this.size() != other.size()) { return false; }
     return true;
   }
-  
-  public long fromIndex(final long index)
-  {
-    final long value = this.from + index;
-    if (!this.contains(value)) { throw new IllegalArgumentException(); }
-    return value;
-  }
-  
+
   @Override
   public int hashCode()
   {
@@ -69,25 +46,14 @@ public class LongRange
     result = prime * result + (int) (this.size() ^ this.size() >>> 32);
     return result;
   }
-  
-  public long read(final BitInputStream in) throws IOException
-  {
-    return this.decode(in.read(this.bitDepth));
-  }
-  
+
   public long size()
   {
     final long size = this.to - this.from;
     if (0 == size) { return 1; }
     return size;
   }
-  
-  public long toIndex(final long value)
-  {
-    if (!this.contains(value)) { throw new IllegalArgumentException(); }
-    return value - this.from;
-  }
-  
+
   public JSONObject toJson() throws JSONException
   {
     final JSONObject dimJson = new JSONObject();

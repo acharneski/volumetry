@@ -1,17 +1,14 @@
 package com.simiacryptus.probabilityModel.rules.fitness;
 
-import java.util.List;
-
 import com.simiacryptus.probabilityModel.model.PointNode;
 import com.simiacryptus.probabilityModel.rules.fitness.VolumeDataDensity.VolumeDataNormalizer;
+
+import java.util.List;
 
 public abstract class LinearSplitFitness implements SplitFitness
 {
   
   
-  /* (non-Javadoc)
-   * @see com.simiacryptus.probabilityModel.rules.fitness.SplitFitness#getFitness(java.util.List)
-   */
   @Override
   public double getFitness(PointNode node, final List<VolumeDataDensity> list)
   {

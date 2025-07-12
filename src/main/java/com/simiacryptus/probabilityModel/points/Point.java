@@ -1,9 +1,9 @@
 package com.simiacryptus.probabilityModel.points;
 
-import java.util.Arrays;
-
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
+
+import java.util.Arrays;
 
 public class Point
 {
@@ -14,13 +14,7 @@ public class Point
     super();
     this.coords = Arrays.copyOf(coords, coords.length);
   }
-  
-  public Point(int dimensions)
-  {
-    super();
-    this.coords = new double[dimensions];
-  }
-  
+
   public double get(int d)
   {
     return coords[d];

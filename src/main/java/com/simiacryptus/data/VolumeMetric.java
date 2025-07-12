@@ -29,13 +29,7 @@ public class VolumeMetric
   {
     return new VolumeMetric(this.value * right, this.dimension);
   }
-  
-  public VolumeMetric multiply(final VolumeMetric right)
-  {
-    return new VolumeMetric(this.value * right.value, this.dimension
-        + right.dimension);
-  }
-  
+
   @Override
   public String toString()
   {
@@ -48,8 +42,4 @@ public class VolumeMetric
     return builder.toString();
   }
 
-  public VolumeMetric divide(double d)
-  {
-    return new VolumeMetric(this.value / d, this.dimension);
-  }
 }

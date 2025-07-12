@@ -1,12 +1,5 @@
 package com.simiacryptus.probabilityModel.rules;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.TreeSet;
-
 import com.simiacryptus.data.DoubleRange;
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.lang.LOG;
@@ -20,6 +13,8 @@ import com.simiacryptus.probabilityModel.rules.metrics.Metric;
 import com.simiacryptus.probabilityModel.util.JvmArrays;
 import com.simiacryptus.probabilityModel.volume.DoubleVolume;
 import com.simiacryptus.probabilityModel.volume.SpacialVolume;
+
+import java.util.*;
 
 public class MetricRuleGenerator implements RuleGenerator
 {
@@ -76,7 +71,7 @@ public class MetricRuleGenerator implements RuleGenerator
     final int dimensions = region.dimensions();
     for (int dimension = 0; dimension < dimensions; dimension++)
     {
-      metrics.add(new DimensionMetric(dimension, region.getRange(dimension)));
+      metrics.add(new DimensionMetric(dimension));
     }
     return metrics;
   }
@@ -213,12 +208,6 @@ public class MetricRuleGenerator implements RuleGenerator
   public int getSplitPoints()
   {
     return this.splitPoints;
-  }
-  
-  public RuleGenerator setSplitPoints(final int splitPoints)
-  {
-    this.splitPoints = splitPoints;
-    return this;
   }
 
   @Override

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{TITLE}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #000; }
+        canvas { display: block; }
+       #info { 
+           position: absolute; 
+           top: 10px; 
+           left: 10px; 
+           color: white; 
+           font-family: Arial, sans-serif; 
+           font-size: 14px;
+           z-index: 100;
+           pointer-events: none;
+          background: rgba(0,0,0,0.7);
+          padding: 10px;
+          border-radius: 5px;
+          max-width: 300px;
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(255,255,255,0.1);
+       }
+       #controls { 
+           position: absolute; 
+           top: 10px; 
+           right: 10px; 
+           color: white; 
+           font-family: Arial, sans-serif; 
+           z-index: 100;
+          background: rgba(0,0,0,0.7);
+          padding: 10px;
+          border-radius: 5px;
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(255,255,255,0.1);
+       }
+       #colorSchemeSelect { 
+           background: rgba(0,0,0,0.7); 
+           color: white; 
+           border: 1px solid #555; 
+           padding: 5px; 
+           border-radius: 3px; 
+           font-size: 12px;
+           cursor: pointer;
+          transition: all 0.2s ease;
+       }
+       #colorSchemeSelect:hover {
+           background: rgba(0,0,0,0.9);
+          border-color: #777;
+      }
+      #colorSchemeSelect:focus {
+          outline: 2px solid #4a9eff;
+          outline-offset: 2px;
+       }
+      #stats {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          color: white;
+          font-family: Arial, sans-serif;
+          font-size: 12px;
+          background: rgba(0,0,0,0.7);
+          padding: 5px 10px;
+          border-radius: 3px;
+          z-index: 100;
+          pointer-events: none;
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(255,255,255,0.1);
+          min-width: 150px;
+      }
+      #help {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          color: white;
+          font-family: Arial, sans-serif;
+          font-size: 11px;
+          background: rgba(0,0,0,0.7);
+          padding: 5px 10px;
+          border-radius: 3px;
+          z-index: 100;
+          pointer-events: none;
+          display: none;
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(255,255,255,0.1);
+          max-width: 200px;
+          line-height: 1.4;
+      }
+      #tooltip {
+          position: absolute;
+          background: rgba(0,0,0,0.9);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-family: Arial, sans-serif;
+          font-size: 12px;
+          pointer-events: none;
+          z-index: 1000;
+          display: none;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.2);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          max-width: 250px;
+          line-height: 1.4;
+      }
+      #tooltip .dataset-name {
+          font-weight: bold;
+          color: #4a9eff;
+          margin-bottom: 4px;
+      }
+      #tooltip .dataset-description {
+          color: #ccc;
+          font-size: 11px;
+          margin-bottom: 4px;
+      }
+      #tooltip .point-info {
+          color: #fff;
+          font-size: 11px;
+      }
+       #loading {
+           position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           color: white;
+           font-family: Arial, sans-serif;
+           font-size: 18px;
+           z-index: 200;
+          text-align: center;
+          background: rgba(0,0,0,0.8);
+          padding: 20px 30px;
+          border-radius: 10px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.2);
+       }
+      /* Loading animation */
+      @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+      }
+      #loading.animate {
+          animation: pulse 1.5s ease-in-out infinite;
+      }
+      /* Responsive design */
+      @media (max-width: 768px) {
+          #info, #controls, #stats, #help {
+              font-size: 12px;
+              padding: 8px;
+          }
+          #info { max-width: 250px; }
+          #help { max-width: 180px; }
+      }
+    </style>
+</head>
+<body>
+    <div id="loading">Loading 3D scatter plot...</div>
+    <div id="info">{{TITLE}}</div>
+   <div id="controls">
+       <label for="colorSchemeSelect">Color Scheme:</label>
+       <select id="colorSchemeSelect">
+           <option value="default">Default</option>
+           <option value="rainbow">Rainbow</option>
+           <option value="heat">Heat Map</option>
+           <option value="cool">Cool Blues</option>
+           <option value="monochrome">Monochrome</option>
+          <option value="viridis">Viridis</option>
+          <option value="plasma">Plasma</option>
+       </select>
+   </div>
+   <div id="stats">FPS: -- | Objects: -- | Points: --</div>
+   <div id="help">
+       Controls:<br>
+       • Mouse: Rotate view<br>
+       • Wheel: Zoom in/out<br>
+       • Right-click + drag: Pan<br>
+       • R: Reset camera<br>
+       • H: Toggle this help<br>
+       • F: Toggle fullscreen<br>
+       • A: Auto-rotate<br>
+       • Space: Pause/Resume
+   </div>
+  <div id="tooltip"></div>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+       import { Raycaster } from 'three';
+       
+       // Show loading indicator
+       const loadingElement = document.getElementById('loading');
+       if (loadingElement) {
+           loadingElement.classList.add('animate');
+       }
+       console.log('Initializing 3D scatter plot...');
+
+       // Error handling wrapper
+       function safeExecute(fn, errorMessage) {
+           try {
+               return fn();
+           } catch (error) {
+               console.error(errorMessage, error);
+               if (loadingElement) {
+                   loadingElement.textContent = `Error: ${errorMessage}`;
+                   loadingElement.style.color = '#ff4444';
+               }
+              // Show error in stats as well
+              const statsElement = document.getElementById('stats');
+              if (statsElement) {
+                  statsElement.textContent = `Error: ${errorMessage}`;
+                  statsElement.style.color = '#ff4444';
+              }
+               return null;
+           }
+       }
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0xf0f0f0);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+       renderer.outputColorSpace = THREE.SRGBColorSpace;
+       renderer.toneMapping = THREE.ACESFilmicToneMapping;
+       renderer.toneMappingExposure = 1.0;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
+        controls.enablePan = true;
+        controls.enableRotate = true;
+        controls.maxDistance = 1000;
+        controls.minDistance = 1;
+       controls.autoRotate = false;
+       controls.autoRotateSpeed = 0.5;
+       controls.screenSpacePanning = false;
+       controls.keyPanSpeed = 7.0;
+       controls.keys = {
+           LEFT: 'ArrowLeft',
+           UP: 'ArrowUp', 
+           RIGHT: 'ArrowRight',
+           BOTTOM: 'ArrowDown'
+       };
+       // Mouse interaction for tooltips
+       const mouse = new THREE.Vector2();
+       const raycaster = new THREE.Raycaster();
+       const tooltip = document.getElementById('tooltip');
+       let hoveredObject = null;
+       // Configure raycaster for point clouds
+       raycaster.params.Points.threshold = 0.1;
+        
+       
+       // Function to register plot objects (to be called from plot data)
+       let plotObjects = []; // Store references to plot objects for recoloring
+       let originalColors = []; // Store original colors for each plot object
+       
+       window.registerPlotObject = function(obj, datasetIndex) {
+           return safeExecute(() => {
+               console.log(`Registering plot object for dataset ${datasetIndex}`);
+               console.log(`  - Object type: ${obj.type}`);
+               console.log(`  - Has geometry: ${!!obj.geometry}`);
+               console.log(`  - Has color attribute: ${!!(obj.geometry && obj.geometry.attributes.color)}`);
+               if (obj.geometry && obj.geometry.attributes.color) {
+                   console.log(`  - Color array length: ${obj.geometry.attributes.color.array.length}`);
+                   console.log(`  - Point count: ${obj.geometry.attributes.color.array.length / 3}`);
+               }
+               plotObjects.push(obj);
+               // Store original colors
+               if (obj.geometry && obj.geometry.attributes.color) {
+                   const colors = obj.geometry.attributes.color.array.slice(); // Make a copy
+                   originalColors.push(colors);
+                   // Log first few original colors for debugging
+                   console.log(`  - Sample original colors (first 3 points):`);
+                   for (let i = 0; i < Math.min(3, colors.length / 3); i++) {
+                       console.log(`    Point ${i}: RGB(${colors[i*3].toFixed(3)}, ${colors[i*3+1].toFixed(3)}, ${colors[i*3+2].toFixed(3)})`);
+                   }
+               } else {
+                   originalColors.push([]);
+               }
+               // Store dataset index as a property on the object
+               obj.userData.datasetIndex = datasetIndex || 0;
+               console.log(`  - Stored datasetIndex: ${obj.userData.datasetIndex}`);
+           }, 'Failed to register plot object');
+       };
+       
+       // Function to get current color scheme colors (to be used in plot data generation)
+       window.getSchemeColor = function(index) {
+           return safeExecute(() => {
+               console.log(`Getting color for index ${index} with scheme ${currentColorScheme}`);
+               const scheme = colorSchemes[currentColorScheme];
+               if (!scheme || !scheme.colors || scheme.colors.length === 0) {
+                   return 0xff0000; // Default red color
+               }
+               const colorIndex = Math.abs(index) % scheme.colors.length;
+               return scheme.colors[colorIndex];
+           }, 'Failed to get scheme color') || 0xff0000;
+       };
+
+       // Color schemes
+       const colorSchemes = {
+           default: {
+               background: 0xf0f0f0,
+               colors: [0xff0000, 0x00ff00, 0x0000ff, 0xffaa00, 0xff00ff]
+           },
+           rainbow: {
+               background: 0xffffff,
+               colors: [0xff0000, 0xff8000, 0xffff00, 0x00ff00, 0x0000ff]
+           },
+           heat: {
+               background: 0x1a1a1a,
+               colors: [0xff0000, 0xff8000, 0xffff00, 0x80ff00, 0x00ff80]
+           },
+           cool: {
+               background: 0xe6f3ff,
+               colors: [0x000080, 0x0080c0, 0x00c0ff, 0x4080ff, 0x8040ff]
+           },
+           monochrome: {
+               background: 0xffffff,
+               colors: [0x000000, 0x333333, 0x666666, 0x999999, 0xcccccc]
+          },
+          viridis: {
+              background: 0x1a1a1a,
+              colors: [0x440154, 0x482777, 0x3f4a8a, 0x26838f, 0x6cce5a]
+          },
+          plasma: {
+              background: 0x0d0d0d,
+              colors: [0x0d0887, 0x5302a3, 0x8b0aa5, 0xd8576b, 0xf89441]
+           }
+       };
+       let currentColorScheme = 'default';
+       // Add ambient and directional lighting for better visualization
+       const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+       scene.add(ambientLight);
+       const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+       directionalLight.position.set(1, 1, 1);
+       directionalLight.castShadow = true;
+       scene.add(directionalLight);
+       {{DATASET_INFO}}
+
+
+        {{PLOT_DATA}}
+       
+       // Hide loading indicator after plot data is loaded
+       if (loadingElement) {
+           loadingElement.style.display = 'none';
+       }
+       console.log(`Plot data loaded. Total objects in scene: ${scene.children.length}`);
+       // Diagnostic: Log all registered plot objects
+       console.log('=== PLOT OBJECTS DIAGNOSTIC ===');
+       console.log(`Total registered plot objects: ${plotObjects.length}`);
+       plotObjects.forEach((obj, index) => {
+           console.log(`Plot object ${index}:`);
+           console.log(`  - Dataset index: ${obj.userData.datasetIndex}`);
+           console.log(`  - Type: ${obj.type}`);
+           if (obj.geometry && obj.geometry.attributes.position) {
+               console.log(`  - Points: ${obj.geometry.attributes.position.count}`);
+           }
+       });
+       console.log('==============================');
+
+       // Validate scene has content
+       if (scene.children.length === 0) {
+           console.warn('No objects found in scene after loading plot data');
+           if (loadingElement) {
+               loadingElement.textContent = 'No data to display';
+               loadingElement.style.display = 'block';
+               loadingElement.style.color = '#ffaa00';
+           }
+       }
+
+        // Calculate bounding box for better camera positioning
+        safeExecute(() => {
+            const box = new THREE.Box3().setFromObject(scene);
+            if (box.isEmpty()) {
+                console.warn('Scene bounding box is empty, using default camera position');
+                camera.position.set(10, 10, 10);
+                camera.lookAt(0, 0, 0);
+                controls.target.set(0, 0, 0);
+                return;
+            }
+            
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            
+            // Ensure minimum distance for very small scenes
+            const distance = Math.max(maxDim * 2, 5);
+            camera.position.set(center.x + distance, center.y + distance, center.z + distance);
+            
+            console.log(`Camera positioned at: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
+            console.log(`Scene bounds - Center: ${center.x}, ${center.y}, ${center.z}, Max dimension: ${maxDim}`);
+            
+            camera.lookAt(center);
+            controls.target.copy(center);
+        }, 'Failed to position camera');
+        
+// Color scheme switching functionality
+       // Mouse move handler for tooltips
+       function onMouseMove(event) {
+           return safeExecute(() => {
+               // Calculate mouse position in normalized device coordinates
+               mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+               mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+               // Update the picking ray with the camera and mouse position
+               raycaster.setFromCamera(mouse, camera);
+               // Calculate objects intersecting the picking ray
+               const intersects = raycaster.intersectObjects(plotObjects);
+               if (intersects.length > 0) {
+                   const intersect = intersects[0];
+                   const object = intersect.object;
+                   const datasetIndex = object.userData.datasetIndex || 0;
+                   if (hoveredObject !== object) {
+                       hoveredObject = object;
+                       showTooltip(event.clientX, event.clientY, datasetIndex, intersect);
+                   }
+               } else {
+                   if (hoveredObject) {
+                       hoveredObject = null;
+                       hideTooltip();
+                   }
+               }
+           }, 'Failed to handle mouse move');
+       }
+       function showTooltip(x, y, datasetIndex, intersect) {
+           const datasetInfo = window.datasetInfo[datasetIndex];
+           if (!datasetInfo || !tooltip) return;
+           const point = intersect.point;
+           let content = `<div class="dataset-name">${datasetInfo.name}</div>`;
+           if (datasetInfo.description) {
+               content += `<div class="dataset-description">${datasetInfo.description}</div>`;
+           }
+           content += `<div class="point-info">`;
+           content += `Position: (${point.x.toFixed(3)}, ${point.y.toFixed(3)}, ${point.z.toFixed(3)})<br>`;
+           content += `Points in dataset: ${datasetInfo.pointCount.toLocaleString()}`;
+           content += `</div>`;
+           tooltip.innerHTML = content;
+           tooltip.style.display = 'block';
+           // Position tooltip near mouse but avoid screen edges
+           const tooltipRect = tooltip.getBoundingClientRect();
+           let tooltipX = x + 10;
+           let tooltipY = y - 10;
+           if (tooltipX + tooltipRect.width > window.innerWidth) {
+               tooltipX = x - tooltipRect.width - 10;
+           }
+           if (tooltipY < 0) {
+               tooltipY = y + 20;
+           }
+           tooltip.style.left = tooltipX + 'px';
+           tooltip.style.top = tooltipY + 'px';
+       }
+       function hideTooltip() {
+           if (tooltip) {
+               tooltip.style.display = 'none';
+           }
+       }
+       // Add mouse event listeners
+       renderer.domElement.addEventListener('mousemove', onMouseMove);
+       renderer.domElement.addEventListener('mouseleave', hideTooltip);
+       
+       function applyColorScheme(schemeName) {
+           return safeExecute(() => {
+               console.log(`Applying color scheme: ${schemeName}`);
+               console.log(`Total plot objects: ${plotObjects.length}`);
+               const scheme = colorSchemes[schemeName];
+               if (!scheme) {
+                   console.warn(`Color scheme '${schemeName}' not found`);
+                   return;
+               }
+               
+               // Update background
+               renderer.setClearColor(scheme.background);
+               // Create diagnostic map to track color assignments
+               const colorAssignments = new Map();
+               
+               
+               // Update plot object colors
+               plotObjects.forEach((obj, index) => {
+                   console.log(`Processing object ${index}:`);
+                   console.log(`  - userData.datasetIndex: ${obj.userData.datasetIndex}`);
+                   
+                   if (obj.material && obj.geometry && obj.geometry.attributes.color) {
+                       const colors = obj.geometry.attributes.color.array;
+                       const pointCount = colors.length / 3;
+                       console.log(`  - Point count: ${pointCount}`);
+                       
+                       if (schemeName === 'default') {
+                           // Restore original colors
+                           const originalColorArray = originalColors[index];
+                           if (originalColorArray && originalColorArray.length === colors.length) {
+                               for (let i = 0; i < colors.length; i++) {
+                                   colors[i] = originalColorArray[i];
+                               }
+                               console.log(`  - Restored original colors`);
+                           }
+                       } else {
+                           // Apply colors based on dataset index (all points in same dataset get same color)
+                           const datasetIndex = obj.userData.datasetIndex || 0;
+                           const colorIndex = datasetIndex % scheme.colors.length;
+                           const newColor = new THREE.Color(scheme.colors[colorIndex]);
+                           console.log(`  - Dataset index: ${datasetIndex}`);
+                           console.log(`  - Color index: ${colorIndex}`);
+                           console.log(`  - New color: RGB(${newColor.r.toFixed(3)}, ${newColor.g.toFixed(3)}, ${newColor.b.toFixed(3)})`);
+                           console.log(`  - Hex color: #${newColor.getHexString()}`);
+                           // Track color assignments
+                           if (!colorAssignments.has(datasetIndex)) {
+                               colorAssignments.set(datasetIndex, {
+                                   color: newColor.getHexString(),
+                                   objectCount: 0,
+                                   totalPoints: 0
+                               });
+                           }
+                           colorAssignments.get(datasetIndex).objectCount++;
+                           colorAssignments.get(datasetIndex).totalPoints += pointCount;
+                           
+                           for (let i = 0; i < pointCount; i++) {
+                               colors[i * 3] = newColor.r;
+                               colors[i * 3 + 1] = newColor.g;
+                               colors[i * 3 + 2] = newColor.b;
+                           }
+                           // Log sample of applied colors
+                           console.log(`  - Sample applied colors (first 3 points):`);
+                           for (let i = 0; i < Math.min(3, pointCount); i++) {
+                               console.log(`    Point ${i}: RGB(${colors[i*3].toFixed(3)}, ${colors[i*3+1].toFixed(3)}, ${colors[i*3+2].toFixed(3)})`);
+                           }
+                       }
+                       obj.geometry.attributes.color.needsUpdate = true;
+                   } else {
+                       console.log(`  - Skipped: No material, geometry, or color attribute`);
+                   }
+               });
+               // Log color assignment summary
+               console.log(`Color assignment summary for scheme '${schemeName}':`);
+               colorAssignments.forEach((info, datasetIndex) => {
+                   console.log(`  Dataset ${datasetIndex}: Color #${info.color}, ${info.objectCount} objects, ${info.totalPoints} total points`);
+               });
+               // Diagnostic: Check if all objects have the same datasetIndex
+               const uniqueDatasetIndices = new Set(plotObjects.map(obj => obj.userData.datasetIndex));
+               console.log(`Unique dataset indices: ${Array.from(uniqueDatasetIndices).join(', ')}`);
+               if (uniqueDatasetIndices.size === 1) {
+                   console.warn(`WARNING: All objects have the same dataset index (${Array.from(uniqueDatasetIndices)[0]}). This will result in all datasets having the same color!`);
+               }
+               
+               console.log(`Color scheme '${schemeName}' applied to ${plotObjects.length} objects`);
+               currentColorScheme = schemeName;
+           }, `Failed to apply color scheme '${schemeName}'`);
+       }
+       
+       // Color scheme selector event listener
+       document.getElementById('colorSchemeSelect').addEventListener('change', function(e) {
+           console.log(`Color scheme changed to: ${e.target.value}`);
+           applyColorScheme(e.target.value);
+       });
+       // Performance monitoring
+       let frameCount = 0;
+       let lastTime = performance.now();
+      const statsElement = document.getElementById('stats');
+      let totalPoints = 0;
+      let isPaused = false;
+      // Count total points in the scene
+      function countPoints() {
+          totalPoints = 0;
+          scene.traverse((object) => {
+              if (object.geometry && object.geometry.attributes.position) {
+                  totalPoints += object.geometry.attributes.position.count;
+              }
+          });
+      }
+      // Initial point count
+      countPoints();
+       
+       function animate() {
+           if (!isPaused) {
+               requestAnimationFrame(animate);
+               controls.update();
+               renderer.render(scene, camera);
+           } else {
+               // Still request animation frame when paused to handle resume
+               requestAnimationFrame(animate);
+               return;
+           }
+          
+          // Update stats every 60 frames
+           frameCount++;
+           if (frameCount % 60 === 0) {
+               const currentTime = performance.now();
+               const fps = 60000 / (currentTime - lastTime);
+              if (statsElement) {
+                  statsElement.textContent = `FPS: ${fps.toFixed(1)} | Objects: ${scene.children.length} | Points: ${totalPoints.toLocaleString()}`;
+                  if (isPaused) {
+                      statsElement.textContent += ' | PAUSED';
+                  }
+              }
+               lastTime = currentTime;
+           }
+       }
+
+        animate();
+
+        window.addEventListener('resize', function() {
+            safeExecute(() => {
+                console.log(`Window resized to: ${window.innerWidth}x${window.innerHeight}`);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }, 'Failed to handle window resize');
+        });
+        // Keyboard shortcuts
+        window.addEventListener('keydown', function(e) {
+           // Prevent default behavior for our shortcuts
+           const ourKeys = ['r', 'R', 'h', 'H', 'f', 'F', 'a', 'A', ' '];
+           if (ourKeys.includes(e.key)) {
+               e.preventDefault();
+           }
+           // Hide tooltip on any key press
+           hideTooltip();
+           
+            switch(e.key) {
+                case 'r':
+                case 'R':
+                    // Reset camera position
+                    safeExecute(() => {
+                        const box = new THREE.Box3().setFromObject(scene);
+                        if (!box.isEmpty()) {
+                            const center = box.getCenter(new THREE.Vector3());
+                            const size = box.getSize(new THREE.Vector3());
+                            const maxDim = Math.max(size.x, size.y, size.z);
+                            const distance = Math.max(maxDim * 2, 5);
+                            camera.position.set(center.x + distance, center.y + distance, center.z + distance);
+                            camera.lookAt(center);
+                            controls.target.copy(center);
+                            controls.reset();
+                            console.log('Camera position reset');
+                        }
+                    }, 'Failed to reset camera');
+                    break;
+                case 'h':
+                case 'H':
+                   // Toggle help
+                   const helpElement = document.getElementById('help');
+                   if (helpElement) {
+                       helpElement.style.display = helpElement.style.display === 'none' ? 'block' : 'none';
+                    }
+                    break;
+               case 'f':
+               case 'F':
+                   // Toggle fullscreen
+                   safeExecute(() => {
+                       if (!document.fullscreenElement) {
+                           document.documentElement.requestFullscreen();
+                       } else {
+                           document.exitFullscreen();
+                       }
+                   }, 'Failed to toggle fullscreen');
+                   break;
+               case 'a':
+               case 'A':
+                   // Toggle auto-rotation
+                   controls.autoRotate = !controls.autoRotate;
+                   console.log(`Auto-rotation ${controls.autoRotate ? 'enabled' : 'disabled'}`);
+                   break;
+               case ' ':
+                   // Toggle pause/resume
+                   isPaused = !isPaused;
+                   console.log(`Animation ${isPaused ? 'paused' : 'resumed'}`);
+                   if (!isPaused) {
+                       animate(); // Resume animation loop
+                   }
+                   break;
+            }
+        });
+        console.log('3D scatter plot initialization complete');
+       console.log('Keyboard shortcuts: R - Reset camera, H - Toggle help, F - Fullscreen, A - Auto-rotate');
+       
+       // Add mouse interaction feedback
+       let isInteracting = false;
+       renderer.domElement.addEventListener('mousedown', () => { 
+           isInteracting = true; 
+           hideTooltip(); // Hide tooltip when starting interaction
+       });
+       renderer.domElement.addEventListener('mouseup', () => { isInteracting = false; });
+       
+       // Handle fullscreen changes
+       document.addEventListener('fullscreenchange', () => {
+           safeExecute(() => {
+               camera.aspect = window.innerWidth / window.innerHeight;
+               camera.updateProjectionMatrix();
+               renderer.setSize(window.innerWidth, window.innerHeight);
+           }, 'Failed to handle fullscreen change');
+       });
+       
+       // Add visibility change handling for performance
+       document.addEventListener('visibilitychange', () => {
+           if (document.hidden) {
+               // Pause animation when tab is hidden for performance
+               isPaused = true;
+           } else {
+               // Resume animation when tab becomes visible
+               isPaused = false;
+               animate();
+           }
+       });
+       // Add error boundary for WebGL context loss
+       renderer.domElement.addEventListener('webglcontextlost', (event) => {
+           event.preventDefault();
+           console.warn('WebGL context lost');
+           if (statsElement) {
+               statsElement.textContent = 'WebGL context lost - please refresh';
+               statsElement.style.color = '#ff4444';
+           }
+       });
+       renderer.domElement.addEventListener('webglcontextrestored', () => {
+           console.log('WebGL context restored');
+           // Reinitialize if needed
+           countPoints();
+       });
+       // Add touch support for mobile devices
+       let touchStartTime = 0;
+       renderer.domElement.addEventListener('touchstart', (e) => {
+           touchStartTime = Date.now();
+       });
+       renderer.domElement.addEventListener('touchend', (e) => {
+           const touchDuration = Date.now() - touchStartTime;
+           if (touchDuration < 200 && e.touches.length === 0) {
+               // Quick tap - toggle help on mobile
+               const helpElement = document.getElementById('help');
+               if (helpElement) {
+                   helpElement.style.display = helpElement.style.display === 'none' ? 'block' : 'none';
+               }
+           }
+       });
+    </script>
+</body>
+</html>

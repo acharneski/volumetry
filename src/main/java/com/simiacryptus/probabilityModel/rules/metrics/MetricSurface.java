@@ -1,8 +1,5 @@
 package com.simiacryptus.probabilityModel.rules.metrics;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.lang.LOG;
 import com.simiacryptus.probabilityModel.ModelSampler;
@@ -12,6 +9,9 @@ import com.simiacryptus.probabilityModel.model.ScalarModel;
 import com.simiacryptus.probabilityModel.rules.MetricRule;
 import com.simiacryptus.probabilityModel.visitors.ModelPartitioner;
 import com.simiacryptus.probabilityModel.volume.DoubleVolume;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MetricSurface
 {
@@ -141,10 +141,5 @@ public class MetricSurface
       LOG.d("Updated model (%s nodes; %s points)", model.getNodeCount(), model.getWeight());
     }
   }
-  
-  public void setBatchSize(final int batchSize)
-  {
-    this.modelUpdateFrequency = batchSize;
-  }
-  
+
 }

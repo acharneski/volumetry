@@ -1,12 +1,12 @@
 package com.simiacryptus.probabilityModel.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.simiacryptus.data.VolumeMetric;
 import com.simiacryptus.probabilityModel.rules.PartitionRule;
 import com.simiacryptus.probabilityModel.volume.SpacialVolume;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class NodeBase<T extends NodeBase<T>>
 {
@@ -138,21 +138,6 @@ public abstract class NodeBase<T extends NodeBase<T>>
     return c;
   }
 
-  public boolean verifyStructure()
-  {
-    assert(this.nodeCount == countNodes());
-    assert(null == this.parent || -1 < this.parent.getChildren().indexOf(this));
-    for(T c : getChildren())
-    {
-      if (null != c)
-      {
-        assert (c.getParent() == this);
-        assert (c.verifyStructure());
-      }
-    }
-    return true;
-  }
-
   public T getParent()
   {
     assert(null == this.parent || -1 < this.parent.getChildren().indexOf(this));
@@ -179,22 +164,7 @@ public abstract class NodeBase<T extends NodeBase<T>>
   {
     return this.rule;
   }
-  
-  public DistributionModel<T> getTree()
-  {
-    if(null == this.tree && null != this.parent)
-    {
-      synchronized (this)
-      {
-        if (null == this.tree && null != this.parent)
-        {
-          this.tree = this.parent.getTree();
-        }
-      }
-    }
-    return this.tree;
-  }
-  
+
   public VolumeMetric getVolume()
   {
     return this.getRegion().getVolume();

@@ -1,13 +1,12 @@
 package com.simiacryptus.probabilityModel.rules.metrics;
 
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
+import com.simiacryptus.probabilityModel.kdtree.KDTree;
+import com.simiacryptus.util.ObjUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.simiacryptus.probabilityModel.kdtree.KDTree;
-import com.simiacryptus.util.ObjUtil;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class KDTreeMetric extends Metric
 {
@@ -17,12 +16,7 @@ public class KDTreeMetric extends Metric
   private int          truncate     = 0;
   
   private int          neighborhood = 10;
-  
-  public KDTreeMetric(final double[][] dataPoints)
-  {
-    this(new KDTree(dataPoints));
-  }
-  
+
   public KDTreeMetric(final KDTree tree)
   {
     super();
@@ -57,17 +51,7 @@ public class KDTreeMetric extends Metric
   {
     return this.truncate;
   }
-  
-  public void setNeighborhood(final int neighborhood)
-  {
-    this.neighborhood = neighborhood;
-  }
-  
-  public void setTruncate(final int truncate)
-  {
-    this.truncate = truncate;
-  }
-  
+
   @Override
   public JSONObject toJson() throws JSONException
   {
